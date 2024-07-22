@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('job_responsibilities', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('job_candidates', function (Blueprint $table) {
             $table->id();
+            $table->string('resume');
+            $table->text('message');
+            $table->boolean('is_hired');
+            $table->unsignedBigInteger('candidate_id');
+            $table->foreignId('company_job_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('candidate_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

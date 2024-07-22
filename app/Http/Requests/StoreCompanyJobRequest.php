@@ -11,7 +11,7 @@ class StoreCompanyJobRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class StoreCompanyJobRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'salary' => ['required', 'integer'],
+            'company_id' => ['required', 'integer'],
+            'category_id' => ['required', 'integer'],
+            'name' => ['required', 'string', 'max:255'],
+            'skill_level' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
+            'type' => ['required', 'string', 'max:255'],
+            'thumbnail' => ['required', 'images', 'mimes:png, jpg, jpeg'],
+            'responsibilities.*' => ['required', 'string', 'max:255'],
+            'qualifications.*' => ['required', 'string', 'max:255'],
+            'about' => ['required', 'string', 'max:65535'],
         ];
     }
 }
