@@ -54,7 +54,6 @@ class RolePermissionSeeder extends Seeder
 
         $employeeRole->syncPermissions($employeePermissions);
 
-
         // super admin
         $superAdminRole = Role::firstOrCreate([
             'name' => 'super_admin'
@@ -63,7 +62,7 @@ class RolePermissionSeeder extends Seeder
         $user = User::create([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
-            'occupation' => 'superadmin',
+            'occupation' => 'super admin',
             'avatar' => 'images/profile.jpg',
             'experience' => 500,
             'password' => bcrypt('password'),
