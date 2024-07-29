@@ -12,7 +12,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        // Fetch all categories in descending order using pagination, with 10 items per page.
+        $categories = Category::orderByDesc('id')->paginate(10);
+
+        // Pass the categories to the view for rendering.
+        return view ('super_admin.categories.index', compact('categories'));
     }
 
     /**

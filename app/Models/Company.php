@@ -18,10 +18,12 @@ class Company extends Model
         'employer_id',
     ];
 
+    //relations between models user and company
     public function employer(){
         return $this->belongsTo(User::class, 'employer_id');
     }
 
+    // relations between models company and company_job
     public function jobs(){
         return $this->hasMany(CompanyJob::class);
     }

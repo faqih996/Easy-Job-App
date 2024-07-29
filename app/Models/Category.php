@@ -16,6 +16,7 @@ class Category extends Model
         'slug',
     ];
 
+    //relations between categories and jobs
     public function jobs(){
         return $this->hasMany(CompanyJob::class);
     }
