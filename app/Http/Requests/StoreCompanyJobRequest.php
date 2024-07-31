@@ -29,7 +29,7 @@ class StoreCompanyJobRequest extends FormRequest
             'skill_level' => ['required', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
-            'thumbnail' => ['required', 'images', 'mimes:png, jpg, jpeg'],
+            'thumbnail' => ['required', 'image', 'mimes:png,jpg,jpeg'],
             'responsibilities.*' => ['required', 'string', 'max:255'],
             'qualifications.*' => ['required', 'string', 'max:255'],
             'about' => ['required', 'string', 'max:65535'],

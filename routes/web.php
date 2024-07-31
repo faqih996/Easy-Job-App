@@ -4,14 +4,13 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyJobController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FrontController;
 use App\Http\Controllers\JobCandidateController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontController::class, 'index'])->name('front.index');
+Route::get('/details/{company_job:slug}', [FrontController::class, 'details'])->name('front.details');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

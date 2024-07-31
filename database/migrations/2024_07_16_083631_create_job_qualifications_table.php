@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('job_qualifications', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
+            $table->foreignId('company_job_id')->constrained()->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

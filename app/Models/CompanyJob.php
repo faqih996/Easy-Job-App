@@ -32,7 +32,7 @@ class CompanyJob extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function responsibility(){
+    public function responsibilities(){
         return $this->hasMany(JobResponsibility::class);
     }
 
@@ -40,7 +40,7 @@ class CompanyJob extends Model
         return $this->hasMany(JobQualification::class);
     }
 
-    public function candidate(){
+    public function candidates(){
         return $this->hasMany(JobCandidate::class);
     }
 }

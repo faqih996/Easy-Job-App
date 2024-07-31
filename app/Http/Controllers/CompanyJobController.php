@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompanyJobRequest;
+use App\Models\Category;
 use App\Models\Company;
 use App\Models\CompanyJob;
+use App\Models\JobResponsibility;
+use App\Models\JobQualification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CompanyJobController extends Controller
 {
@@ -21,17 +27,18 @@ class CompanyJobController extends Controller
         // Get my company from employer_id field in user table
         $my_company = Company::where('employer_id', $user->id)->first();
 
-        // If my company exists, get all its jobs
         if ($my_company) {
-            // Get all jobs
-            $company_jobs = CompanyJob::with(['Category'])->where('company_id', $my_company->id)->paginate(10);
+            // Redirect to the create company page if the user doesn't have a company
+            $company_jobs = CompanyJob::with(['category'])->where('company_id', $my_company->id)->paginate(10);
         } else {
-            // If my company does not exist, return an empty collection
             $company_jobs = collect();
         }
 
+        // Get all categories
+        $categories = Category::all();
+
         // Return view with company jobs
-        return view('admin.company_jobs.index', compact('company_jobs'));
+        return view('admin.company_jobs.index', compact('categories', 'my_company', 'company_jobs'));
     }
 
     /**
@@ -39,15 +46,62 @@ class CompanyJobController extends Controller
      */
     public function create()
     {
-        //
+        $user = Auth::user();
+
+        // Get my company from employer_id field in user table
+        $my_company = Company::where('employer_id', $user->id)->first();
+
+        // Redirect to the create company page if the user doesn't have a company
+        if (!$my_company) {
+            return redirect()->route('admin.company.create');
+        }
+
+        // Get all categories
+        $categories = Category::all();
+
+        // Get all company jobs for the current company
+        return view('admin.company_jobs.create', compact('categories', 'my_company'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCompanyJobRequest $request)
     {
-        //
+
+        DB::transaction(function () use ($request) {
+            $validated = $request->validated();
+
+            if ($request->hasFile('thumbnail')) {
+                $thumbnailPath = $request->file('thumbnail')->store('thumbnails/' . date('Y/m/d'), 'public');
+                $validated['thumbnail'] = $thumbnailPath;
+            }
+
+            $validated['slug'] = Str::slug($validated['name']);
+            $validated['is_open'] = true;
+
+            $newJob = CompanyJob::create($validated);
+
+            if(!empty($validated['responsibilities'])){
+                foreach ($validated['responsibilities'] as $responsibility) {
+                    $newJob->responsibilities()->create([
+                        'name' => $responsibility
+                    ]);
+                }
+            }
+
+            if(!empty($validated['qualifications'])){
+                foreach ($validated['qualifications'] as $qualification) {
+                    $newJob->qualifications()->create([
+                        'name' => $qualification
+                    ]);
+                }
+            }
+
+        });
+
+        return redirect()->route('admin.company_jobs.index')->with('success', 'Job created successfully.');
+
     }
 
     /**
@@ -56,6 +110,7 @@ class CompanyJobController extends Controller
     public function show(CompanyJob $companyJob)
     {
         //
+        return view('admin.company_jobs.show', compact('companyJob'));
     }
 
     /**

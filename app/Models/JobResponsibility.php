@@ -12,6 +12,6 @@ class JobResponsibility extends Model
 
     protected $fillable = [
         'name',
-        'company_id',
+        'company_job_id',
     ];
 }
