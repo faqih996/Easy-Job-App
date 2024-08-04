@@ -29,6 +29,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+        // dd($request->all());
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'account_type' => ['required', 'string', 'max:255'],
@@ -47,14 +50,14 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'occupation' => $request->occupation,
             'experience' => $request->experience,
-            'avatar' => $request->email,
+            'avatar' => $avatarPath,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
         if ($request->account_type == 'Employee') {
             $user->assignRole('employee');
-        } else if ($request->account_type == 'Employer'){
+        } elseif ($request->account_type == 'Employer'){
             $user->assignRole('employer');
         } else {
             $user->assignRole('employee');

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function my_aplication(){
+    public function my_applications(){
 
         // get the current authenticated user
         $user = Auth::user();

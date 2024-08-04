@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontController::class, 'index'])->name('front.index');
 Route::get('/details/{company_job:slug}', [FrontController::class, 'details'])->name('front.details');
+Route::get('/category/{category:slug}', [FrontController::class, 'category'])->name('front.category');
+Route::get('/search/jobs/', [FrontController::class, 'search'])->name('front.search');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -21,12 +23,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::middleware('can:apply job')->group(function () {
+        Route::get('/apply/success', [FrontController::class, 'success_apply'])->name('front.apply.success');
+
+        Route::get('/apply/{company_job:slug}', [FrontController::class, 'apply'])->name('front.apply');
+        Route::post('/apply/{company_job:slug}/submit', [FrontController::class, 'apply_store'])->name('front.apply.store');
+
+    });
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
 
         Route::middleware('can:apply job')->group(function () {
-            Route::get('my-appliacations', [DashboardController::class, 'my_applications'])->name('my.applications');
-            Route::get('my-applications/{job_candidate}', [DashboardController::class, 'my_applications_details'])->name('my.application.details');
+            Route::get('my-applications', [DashboardController::class, 'my_applications'])->name('my.applications');
+            Route::get('my-applications/{job_candidate}', [DashboardController::class, 'my_application_details'])->name('my.application.details');
         });
 
     });
@@ -45,9 +54,9 @@ Route::middleware('auth')->group(function () {
             Route::resource('company_jobs', CompanyJobController::class);
         });
 
-        Route::middleware('can:manage applicants')->group(function () {
+        Route::middleware('can:manage candidates')->group(function () {
             Route::resource('job_candidates', JobCandidateController::class);
-            Route::get('/candidate/{job_candidate}/resume/download', [JobCandidateController::class, 'dwonload_file'])->name('download_resume');
+            Route::get('/candidate/{job_candidate}/resume/download', [JobCandidateController::class, 'download_file'])->name('download_resume');
         });
     });
 });

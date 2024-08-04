@@ -114,7 +114,7 @@
                             <span class="px-3 py-2 text-sm font-bold text-white bg-green-500 rounded-full w-fit">
                                 HIRED
                             </span>
-                        @elseif($candidate->is_hired && $companyJob->is_open)
+                        @elseif(!$candidate->is_hired && $companyJob->is_open)
                             <span class="px-3 py-2 text-sm font-bold text-white bg-orange-500 rounded-full w-fit">
                                 WAITING
                             </span>
