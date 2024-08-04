@@ -83,4 +83,9 @@ class FrontController extends Controller
         return view('front.search', compact('jobs', 'keyword'));
 
     }
+
+    public function category(Category $category){
+        return view('front.category', compact('category'));
+    }
+
 }
